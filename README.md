@@ -3,4 +3,5 @@ It is a discord bot, which shows realtime currency info, and fetches latest summ
 
 ### Supported Commands
 > **stonk help** - Shows help message.
-> **stonk <currency symbol>** - Fetches latest info about entered currency. Example: "stonk btc", will give you highs, lows, and current rates of bitcoin.
+
+> **stonk "currency symbol"** - Fetches latest info about entered currency. Example: "*stonk btc*", will give you highs, lows, and current rates of bitcoin.
