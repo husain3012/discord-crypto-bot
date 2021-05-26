@@ -61,17 +61,19 @@ client.on("message", (msg) => {
   if (pre === "stonk") {
     switch (attr) {
       case "help":
-        sendHelp(msg);
+        console.log("help")
         break;
       case "set":
-        console.log("set");
+        console.log("set")
         break;
       default:
         sendCoinInfo(msg, attr);
         break;
     }
+
   }
 });
+
 
 function sendCoinInfo(msg, coin) {
   msg.channel.send("fetching info");
@@ -99,18 +101,6 @@ function sendCoinInfo(msg, coin) {
     });
 }
 
-function sendHelp(msg) {
-  const help = new Discord.MessageEmbed()
-  .setTitle("Stonk Commands")
-  .setDescription("This bot displays realtime stats in the bot's acitivty section.\nWrite **stonk** followed by your query.")
-  .addFields(
-    {name: "stonk help", value: "Displays this message"},
-    {name: "stonk <coin symbol>", value: "Sends latest info about the currency. Example: stonk btc"}
-  )
-  .setURL("https://github.com/husain3012/discord-crypto-bot")
-  msg.channel.send(help);
-}
-
 function formatNumber(num) {
   return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
 }
@@ -125,9 +115,9 @@ function sendEmbedMessage(obj) {
     .setTitle(obj.name)
     .setColor(color)
     .addFields(
-      { name: "High(24h):", value: formatNumber(obj.high_24h) + " " + _.toUpper(base_curr) },
-      { name: "Low(24h):", value: formatNumber(obj.low_24h) + " " + _.toUpper(base_curr) },
-      { name: "Current Price:", value: formatNumber(obj.current_price) + " " + _.toUpper(base_curr) },
+      { name: "High(24h):", value: formatNumber(obj.high_24h) + _.toUpper(base_curr) },
+      { name: "Low(24h):", value: formatNumber(obj.low_24h) + _.toUpper(base_curr) },
+      { name: "Current Price:", value: formatNumber(obj.current_price) + _.toUpper(base_curr) },
       { name: "%24h:", value: obj.price_change_percentage_24h + " %" }
     )
     .setThumbnail(obj.image);
