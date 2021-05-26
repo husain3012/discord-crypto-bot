@@ -20,38 +20,39 @@ var options = {
   },
 };
 let topCoins = ["btc", "eth", "doge"];
+let refreshRate = 30;
 
 client.on("ready", (err) => {
   if (!err) {
     console.log("Bot connected");
-    let i =0;
-    setInterval(function(){
-      console.log("making api request");
-      axios.request(options).then(function(response){
+    let i = 0;
+    setInterval(function () {
+      axios.request(options).then(function (response) {
         let array = response.data;
         array.every((obj) => {
           if (obj.symbol === topCoins[i]) {
-            client.user.setActivity(_.toUpper(obj.symbol) + " @ " + _.toUpper(base_curr) + formatNumber(obj.current_price) );
-            if(i<topCoins.length){
-              i +=1;
-            }
-            else(i = 0)
-            
+            client.user.setActivity(
+              _.toUpper(obj.symbol) + " @ " + _.toUpper(base_curr) + formatNumber(obj.current_price)
+            );
+            if (i < topCoins.length) {
+              i += 1;
+            } else i = 0;
+
             return false;
           } else {
             return true;
           }
         });
-
-      })
-      
-    }, 30000)
+      });
+    }, refreshRate * 1000);
   }
 });
 
 client.on("message", (msg) => {
   let command = msg.content.slice(0, 5);
   if (msg.content.slice(0, 5) === "stonk") {
+    msg.channel.send("fetiching info");
+    let found = false;
     let coin = msg.content.slice(5);
     axios
       .request(options)
@@ -59,13 +60,16 @@ client.on("message", (msg) => {
         let array = response.data;
         array.every((obj) => {
           if (obj.symbol === coin) {
-            let desc = messageGenerator(obj);
-            msg.channel.send(sendEmbedMessage(obj, desc));
+            msg.channel.send(sendEmbedMessage(obj));
+            found = true;
             return false;
           } else {
             return true;
           }
         });
+        if (!found) {
+          msg.channel.send("YOU WANNA MAKE " + coin + " A NEW CRYPTO, NERD!??!");
+        }
       })
       .catch(function (error) {
         console.error(error);
@@ -73,22 +77,27 @@ client.on("message", (msg) => {
   }
 });
 
-
 function formatNumber(num) {
-  return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+  return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
 }
 
-function sendEmbedMessage(embedObj, message) {
+function sendEmbedMessage(obj) {
+  if (obj.price_change_percentage_24h > 0) {
+    color = 0x4aa96c;
+  } else {
+    color = 0xca8a8b;
+  }
   let Embed = new Discord.MessageEmbed()
-    .setTitle(embedObj.name)
-    .setColor(0x02475e)
-    .setDescription(message)
-    .setThumbnail(embedObj.image);
+    .setTitle(obj.name)
+    .setColor(color)
+    .addFields(
+      { name: "High(24h):", value: formatNumber(obj.high_24h) + _.toUpper(base_curr) },
+      { name: "Low(24h):", value: formatNumber(obj.low_24h) + _.toUpper(base_curr) },
+      { name: "Current Price:", value: formatNumber(obj.current_price) + _.toUpper(base_curr) },
+      { name: "%24h:", value: obj.price_change_percentage_24h + " %" }
+    )
+    .setThumbnail(obj.image);
   return Embed;
-}
-
-function messageGenerator(obj) {
-  return "High(24h): " + formatNumber(obj.high_24h) + ",   Low(24h): " + formatNumber(obj.low_24h) + ",   Current Price: " + formatNumber(obj.current_price);
 }
 
 client.login(process.env.BOTTOKEN);
