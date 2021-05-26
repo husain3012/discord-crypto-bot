@@ -1,6 +1,7 @@
 // jshint esversion:8
 // Add to your server: https://discord.com/oauth2/authorize?client_id=846618544560144394&scope=bot
 // permission integer:3959946304
+// Get geckocoin API key from: 
 
 const Discord = require("discord.js");
 const axios = require("axios");
@@ -49,10 +50,11 @@ client.on("ready", (err) => {
 });
 
 client.on("message", (msg) => {
-  let command = msg.content.slice(0, 5);
-  if (msg.content.slice(0, 5) === "stonk") {
+  msg.content = _.toLower(msg.content);
+  let command = msg.content.slice(0, 5);                                                   
+  if (command === "stonk") {
     console.log(msg.author.username + " is making a get request");
-    msg.channel.send("fetiching info");
+    msg.channel.send("fetching info");
     let found = false;
     let coin = msg.content.slice(5);
     axios
