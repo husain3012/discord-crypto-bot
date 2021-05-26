@@ -32,7 +32,7 @@ client.on("ready", (err) => {
         array.every((obj) => {
           if (obj.symbol === topCoins[i]) {
             client.user.setActivity(
-              _.toUpper(obj.symbol) + " @ " + _.toUpper(base_curr) + formatNumber(obj.current_price)
+              _.toUpper(obj.symbol) + " @ " + _.toUpper(base_curr) + " " + formatNumber(obj.current_price, { type: 'WATCHING' })
             );
             if (i < topCoins.length) {
               i += 1;
@@ -51,6 +51,7 @@ client.on("ready", (err) => {
 client.on("message", (msg) => {
   let command = msg.content.slice(0, 5);
   if (msg.content.slice(0, 5) === "stonk") {
+    console.log(msg.author.username + " is making a get request");
     msg.channel.send("fetiching info");
     let found = false;
     let coin = msg.content.slice(5);
