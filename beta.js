@@ -1,7 +1,12 @@
 // jshint esversion:8
-// Add to your server: https://discord.com/oauth2/authorize?client_id=846618544560144394&scope=bot
+
+// Add this bot to your server: https://discord.com/oauth2/authorize?client_id=846618544560144394&scope=bot
 // permission integer:3959946304
-// Get geckocoin API key from:
+
+
+// Set you Api Keys
+const botToken = process.env.BOTTOKEN;
+const rapidApiKey = process.env.COINGECKOKEY;   //https://rapidapi.com/coingecko/api/coingecko
 
 const Discord = require("discord.js");
 const axios = require("axios");
@@ -16,7 +21,7 @@ var options = {
   url: "https://coingecko.p.rapidapi.com/coins/markets",
   params: { vs_currency: base_curr, page: "1", per_page: "100", order: "market_cap_desc" },
   headers: {
-    "x-rapidapi-key": process.env.COINGECKOKEY,
+    "x-rapidapi-key": rapidApiKey,
     "x-rapidapi-host": "coingecko.p.rapidapi.com",
   },
 };
@@ -28,7 +33,7 @@ let lastApiCall = 0;
 client.on("ready", (err) => {
   if (!err) {
     console.log("Bot connected");
-    
+
     setInterval(function () {
       let i = 0;
       axios.request(options).then(function (response) {
@@ -42,9 +47,8 @@ client.on("ready", (err) => {
                   _.toUpper(base_curr) +
                   " " +
                   formatNumber(obj.current_price, { type: "WATCHING" })
-                
               );
-              console.log("updatinf acivy");
+
               if (i < topCoins.length) {
                 i += 1;
               } else {
@@ -59,7 +63,6 @@ client.on("ready", (err) => {
           });
         }, (refreshRate * 1000) / topCoins.length - 5000);
       });
-      console.log("refreshing")
     }, refreshRate * 1000);
   }
 });
@@ -150,4 +153,4 @@ function sendEmbedMessage(obj) {
   return Embed;
 }
 
-client.login(process.env.BOTTOKEN);
+client.login(botToken);
