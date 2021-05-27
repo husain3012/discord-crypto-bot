@@ -3,16 +3,18 @@
 // Add this bot to your server: https://discord.com/oauth2/authorize?client_id=846618544560144394&scope=bot
 // permission integer:3959946304
 
-
-// Set you Api Keys
-const botToken = process.env.BOTTOKEN;
-const rapidApiKey = process.env.COINGECKOKEY;   //https://rapidapi.com/coingecko/api/coingecko
-
 const Discord = require("discord.js");
 const axios = require("axios");
 const _ = require("lodash");
 const currSymbol = require(__dirname + "/currency-symbol.json");
 require("dotenv").config();
+
+
+// Set you Api Keys
+const botToken = process.env.BOTTOKEN;
+const rapidApiKey = process.env.COINGECKOKEY;   //https://rapidapi.com/coingecko/api/coingecko
+
+
 
 const client = new Discord.Client();
 let base_curr = "inr";
